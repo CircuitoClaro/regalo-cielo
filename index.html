@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>🌌 Galaxia de Cielo • Un Detalle Especial Para Ti ✨</title>
+
+  <!-- Fuentes de Google: Elegantes, Futuristas y Caligráficas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <!-- 1. Canvas 3D de Three.js -->
+  <canvas id="galaxyCanvas"></canvas>
+
+  <!-- Viñeta cósmica, partículas y estrellas fugaces -->
+  <div class="cosmic-vignette"></div>
+  <div class="shooting-stars-container" id="shootingStarsContainer"></div>
+  <div class="floating-hearts-container" id="heartsContainer"></div>
+
+  <!-- 2. HUD Superior: Sonido, Título central dedicado y Botón de Carta -->
+  <header class="hud-header">
+    <!-- Botón de Audio / Sonido -->
+    <button class="hud-btn" id="audioToggleBtn" title="Reproducir / Silenciar música">
+      <div class="sound-bars" id="soundBars">
+        <div class="sound-bar"></div>
+        <div class="sound-bar"></div>
+        <div class="sound-bar"></div>
+        <div class="sound-bar"></div>
+      </div>
+    </button>
+
+    <!-- Título Central de la Galaxia -->
+    <div class="hud-title-container" id="hudTitleContainer">
+      <div class="hud-title">
+        <span class="title-badge">🪐</span>
+        <span id="titleText">PARA CIELO</span>
+        <span class="title-badge">💖</span>
+      </div>
+      <div class="hud-subtitle" id="subtitleText">«Entre millones de estrellas en el cielo, tú eres mi favorita»</div>
+    </div>
+
+    <!-- Botón elegante de Carta para Cielo -->
+    <button class="hud-letter-btn" id="letterOpenBtn" title="Leer carta especial para Cielo">
+      <span class="letter-btn-icon">💌</span>
+      <span class="letter-btn-text">Carta para Cielo</span>
+    </button>
+  </header>
+
+  <!-- 3. Indicador de interacción -->
+  <div class="instruction-hint" id="instructionHint">
+    <span>✨ Arrastra para girar en 3D • Toca una foto o el cielo para descubrir sorpresas</span>
+  </div>
+
+  <!-- 5. Pantalla de Bienvenida / Despegar Hacia La Galaxia -->
+  <div class="intro-modal" id="introModal">
+    <div class="intro-card">
+      <div class="intro-icon">🪐</div>
+      <span class="intro-tag">✨ Un Detalle Cósmico Para Cielo ✨</span>
+      <h1 class="intro-h1">Nuestra Galaxia de Recuerdos</h1>
+      <p class="intro-desc">
+        Cielo, este universo 3D fue creado especialmente para ti, rodeado de estrellas, corazones y cada momento que hace que tu amistad sea única e infinita.
+      </p>
+      <button class="intro-btn" id="enterUniverseBtn">
+        <span>🚀 Abrir Regalo & Explorar</span>
+        <span>💖</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 6. Modal de Fotografía Polaroid al hacer Clic en 3D -->
+  <div class="polaroid-modal" id="polaroidModal">
+    <div class="polaroid-frame" id="polaroidFrame">
+      <div class="polaroid-pin"></div>
+      <button class="polaroid-close-btn" id="polaroidCloseBtn">&times;</button>
+      <div class="polaroid-img-wrapper">
+        <img id="polaroidImg" src="0.png" alt="Recuerdo">
+      </div>
+      <div class="polaroid-caption">
+        <h3 id="polaroidTitle">Mi Universo 🪐</h3>
+        <p id="polaroidDesc">Gracias por iluminar mis días con tu sonrisa y compañía única.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Modal Elegante de Carta Cósmica para Cielo -->
+  <div class="letter-modal" id="letterModal">
+    <div class="letter-card">
+      <button class="letter-close-btn" id="letterCloseBtn" aria-label="Cerrar carta">&times;</button>
+      <div class="letter-decor-top">🪐 ✨ 💖 ✨ 🪐</div>
+      <h2 class="letter-title">Para ti, Cielo ✨</h2>
+      <div class="letter-body">
+        <p><strong>Querida Cielo,</strong></p>
+        <p>
+          Dicen que el universo es infinito, lleno de miles de millones de estrellas, constelaciones y misterios sin descubrir... pero entre toda esa inmensidad, coincidir contigo en este mundo ha sido uno de los regalos más bonitos e increíbles.
+        </p>
+        <p>
+          Haces honor a tu nombre, porque así como el cielo nos regala los atardeceres más hermosos y nos abraza con su grandeza, tu presencia, tus risas y tu forma de ser iluminan cualquier día gris y hacen que todo a tu alrededor sea más alegre.
+        </p>
+        <p>
+          Gracias por escucharme siempre, por tu apoyo sincero, por cada plática interminable y por ser esa amiga incondicional con la que siempre puedo ser yo mismo. Eres un refugio de paz y de risas garantizadas.
+        </p>
+        <p>
+          Creé este pequeño cosmos 3D para ti, para que cada vez que lo mires recuerdes lo valiosa, fuerte, auténtica y maravillosa que eres. No importa cuánto tiempo pase o cuántos caminos recorramos: siempre tendrás en mí a alguien que te admira, te cuida y te quiere con todo el corazón.
+        </p>
+        <p class="letter-highlight">
+          «Gracias por ser mi cielo favorito en este universo.» 💫
+        </p>
+        <p class="letter-sign">
+          Con todo mi cariño siempre, ❤️<br>
+          <span>Para la mejor amiga del universo</span>
+        </p>
+      </div>
+      <div class="letter-seal">
+        <span>✨ GALAXIA DE CIELO • DETALLE ESPECIAL ✨</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio de fondo (musica.mp3) -->
+  <audio id="bgMusic" src="musica.mp3" loop preload="auto"></audio>
+
+  <!-- Librería Three.js local -->
+  <script src="./three.min.js"></script>
+  <!-- Script principal del universo interactivo -->
+  <script src="./script.js"></script>
+</body>
+</html>

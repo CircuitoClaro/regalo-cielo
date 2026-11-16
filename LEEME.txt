@@ -1,0 +1,40 @@
+✨ CÓMO USAR Y PERSONALIZAR TU REGALO: GALAXIA CON CORAZONES DE AMOR ✨
+(Inspirado exactamente en el video de AlexDev @alexx.dev)
+
+=======================================================
+🚀 1. CÓMO ABRIRLO
+=======================================================
+Tienes dos formas muy fáciles de abrirlo:
+1) Haz doble clic en el archivo "🎁 Abrir Galaxia Regalo.bat" que está en tu Escritorio.
+   ¡Se abrirá automáticamente en tu navegador con música y animaciones 3D!
+2) O entra a la carpeta "Regalo-Galaxia-Amiga" y abre directamente "index.html" o ejecuta "Abrir_Regalo.bat".
+
+=======================================================
+🎨 2. QUÉ INCLUYE (IGUALITO A LA CAPTURA DEL VIDEO)
+=======================================================
+- 🪐 Agujero negro cósmico 3D con disco de acreción fucsia/rosa y lente gravitacional tipo Interstellar.
+- 💖 Espiral de miles de partículas estelares y corazones en tonos neón.
+- 📸 Fotos estilo Polaroid en 3D orbitando alrededor de la galaxia con dedicatorias:
+  - "mi universo 🪐"
+  - "Amor de mi vida ✨"
+  - "Te amo 💖"
+  - "Preciosa 🌹"
+  - "Siempre juntos 💫"
+  - "Mi persona favorita 🧸"
+  - ¡Y más!
+- 👆 Haz clic en cualquier foto flotante para ampliarla y leer una nota especial.
+- 🎵 Botón de audio en la esquina superior izquierda con ecualizador animado que reproduce "musica.mp3".
+- 🏷️ Cuadro de código flotante al pie con el estilo TikTok de AlexDev (.Love_You { ... }) con botón para minimizar.
+- 💌 Botón de menú (···) en la esquina superior derecha con una carta dedicada para ella y opciones para cambiar nombres en tiempo real.
+
+=======================================================
+⚙️ 3. CÓMO PERSONALIZARLO CON SUS PROPIAS FOTOS Y FRASES
+=======================================================
+OPCIÓN A (Super rápida desde el navegador):
+- Abre la galaxia en tu navegador, haz clic en el botón de tres puntos (···) arriba a la derecha, cambia el nombre o la frase y haz clic en "Guardar Cambios".
+
+OPCIÓN B (Cambiar fotos y textos):
+- Las fotos que usa la galaxia se llaman 0.png, 1.png, 2.png, ..., 8.png dentro de esta carpeta.
+  Puedes reemplazar cualquiera de esas imágenes con las fotos que tú quieras con tu amiga (guárdalas con el mismo nombre y formato).
+- Si quieres cambiar la música, simplemente reemplaza el archivo "musica.mp3" con la canción favorita de ambos.
+- Para cambiar los textos a tu gusto, abre el archivo "script.js" con el Bloc de Notas. En las primeras líneas (en CONFIG) puedes escribir los nombres, títulos y mensajes que desees.
