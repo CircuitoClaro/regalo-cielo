@@ -79,6 +79,49 @@ let orbitCardGroups = [];
 let raycaster, mousePointer;
 let hoveredCard = null;
 
+// Configuración adaptativa según el dispositivo y orientación (Móvil vs PC)
+function getResponsiveConfig() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const aspect = width / height;
+  const isPortrait = aspect < 1.0;
+  const isNarrowMobile = width < 480;
+
+  if (isPortrait) {
+    // Celular en modo vertical
+    // Se amplía la distancia de la cámara para que toda la galaxia y las fotos quepan con holgura horizontal
+    const responsiveRadius = Math.min(112, Math.max(88, 52 / Math.max(0.42, aspect)));
+    return {
+      radius: responsiveRadius,
+      minRadius: 40,
+      maxRadius: 180,
+      phi: Math.PI / 3.25, // Ángulo más cenital (~55°) para ver la espiral completa en vertical
+      cardScale: isNarrowMobile ? 0.78 : 0.85,
+      isMobile: true
+    };
+  } else if (aspect < 1.35) {
+    // Tablet o pantalla casi cuadrada
+    return {
+      radius: 78,
+      minRadius: 32,
+      maxRadius: 150,
+      phi: Math.PI / 2.8,
+      cardScale: 0.9,
+      isMobile: false
+    };
+  } else {
+    // PC / Pantalla panorámica
+    return {
+      radius: 65,
+      minRadius: 28,
+      maxRadius: 130,
+      phi: Math.PI / 2.6,
+      cardScale: 1.0,
+      isMobile: false
+    };
+  }
+}
+
 // Control de cámara esférica suave
 const cameraControl = {
   radius: 65,
@@ -110,6 +153,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function initThree() {
   const canvas = document.getElementById('galaxyCanvas');
+
+  // Ajustar parámetros iniciales de cámara según la pantalla
+  const responsive = getResponsiveConfig();
+  cameraControl.radius = responsive.radius;
+  cameraControl.targetRadius = responsive.radius;
+  cameraControl.minRadius = responsive.minRadius;
+  cameraControl.maxRadius = responsive.maxRadius;
+  cameraControl.phi = responsive.phi;
+  cameraControl.targetPhi = responsive.phi;
 
   // Escena
   scene = new THREE.Scene();
@@ -504,6 +556,10 @@ function createPolaroidCanvasTexture(photoSrc, captionText, callback) {
 
 function createOrbitingPolaroids() {
   orbitCardGroups = [];
+  const responsive = getResponsiveConfig();
+
+  // Alturas orbitales alternadas inteligentemente para que las fotos nunca colisionen
+  const heightSteps = [-5.5, 3.5, -2.5, 6.0, -6.0, 1.5, -4.0, 5.0, -1.0];
 
   CONFIG.cards.forEach((cardData, index) => {
     const cardGroup = new THREE.Group();
@@ -511,10 +567,10 @@ function createOrbitingPolaroids() {
     // Distribuir en radios de órbita y alturas escalonadas
     const totalCards = CONFIG.cards.length;
     const baseAngle = (index / totalCards) * Math.PI * 2;
-    // Distancia orbital entre 22 y 42
-    const orbitRadius = 24 + (index % 3) * 8;
-    const orbitHeight = (Math.sin(index * 1.5) * 5) + ((index % 2 === 0) ? 2 : -2);
-    const orbitSpeed = 0.003 + (index % 3) * 0.001;
+    // Distancia orbital suavemente distribuida entre 23 y 42
+    const orbitRadius = 24 + ((index * 2.3) % 18);
+    const orbitHeight = heightSteps[index % heightSteps.length];
+    const orbitSpeed = 0.0025 + ((index % 3) * 0.0006);
 
     // Plano del Polaroid 3D (proporción 512x620)
     const cardWidth = 7.5;
@@ -543,6 +599,9 @@ function createOrbitingPolaroids() {
     backGlow.position.z = -0.15;
     cardGroup.add(backGlow);
 
+    // Escala inicial responsiva
+    cardGroup.scale.set(responsive.cardScale, responsive.cardScale, responsive.cardScale);
+
     // Cargar la textura con la imagen y el texto
     createPolaroidCanvasTexture(cardData.img, cardData.caption, (loadedTexture) => {
       cardMesh.material.map = loadedTexture;
@@ -559,7 +618,8 @@ function createOrbitingPolaroids() {
       height: orbitHeight,
       angle: baseAngle,
       speed: orbitSpeed,
-      wobbleOffset: index * 0.8
+      wobbleOffset: index * 0.8,
+      baseScale: responsive.cardScale
     };
 
     scene.add(cardGroup);
@@ -648,10 +708,11 @@ function setupCameraInput(canvas) {
     if (e.touches.length === 1 && isPointerDown) {
       const dx = e.touches[0].clientX - cameraControl.prevMouseX;
       const dy = e.touches[0].clientY - cameraControl.prevMouseY;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+      const totalDist = Math.hypot(e.touches[0].clientX - startX, e.touches[0].clientY - startY);
+      if (totalDist > 9) moved = true;
 
-      cameraControl.targetTheta -= dx * 0.007;
-      cameraControl.targetPhi = Math.max(0.15, Math.min(Math.PI - 0.15, cameraControl.targetPhi + dy * 0.007));
+      cameraControl.targetTheta -= dx * 0.006;
+      cameraControl.targetPhi = Math.max(0.15, Math.min(Math.PI - 0.15, cameraControl.targetPhi + dy * 0.006));
 
       cameraControl.prevMouseX = e.touches[0].clientX;
       cameraControl.prevMouseY = e.touches[0].clientY;
@@ -663,7 +724,7 @@ function setupCameraInput(canvas) {
       const diff = initialTouchDist - currentDist;
       cameraControl.targetRadius = Math.max(
         cameraControl.minRadius,
-        Math.min(cameraControl.maxRadius, cameraControl.targetRadius + diff * 0.15)
+        Math.min(cameraControl.maxRadius, cameraControl.targetRadius + diff * 0.18)
       );
       initialTouchDist = currentDist;
     }
@@ -706,8 +767,9 @@ function checkCardHover() {
     if (hoveredCard !== hitGroup) {
       if (hoveredCard) resetCardVisual(hoveredCard);
       hoveredCard = hitGroup;
-      // Escalar ligeramente y aumentar brillo
-      hoveredCard.scale.set(1.15, 1.15, 1.15);
+      // Escalar ligeramente y aumentar brillo respetando baseScale
+      const base = hoveredCard.userData.baseScale || 1.0;
+      hoveredCard.scale.set(base * 1.15, base * 1.15, base * 1.15);
       hoveredCard.userData.backGlow.scale.set(15, 18, 1);
     }
     canvas.style.cursor = 'pointer';
@@ -721,7 +783,8 @@ function checkCardHover() {
 }
 
 function resetCardVisual(group) {
-  group.scale.set(1, 1, 1);
+  const base = group.userData.baseScale || 1.0;
+  group.scale.set(base, base, base);
   group.userData.backGlow.scale.set(7.5 * 1.6, 9.0 * 1.6, 1);
 }
 
@@ -797,10 +860,36 @@ function animate() {
 }
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Ajuste automático de parámetros según dimensiones del dispositivo
+  const responsive = getResponsiveConfig();
+  cameraControl.minRadius = responsive.minRadius;
+  cameraControl.maxRadius = responsive.maxRadius;
+
+  if (!cameraControl.isDragging) {
+    cameraControl.targetRadius = responsive.radius;
+    cameraControl.targetPhi = responsive.phi;
+  }
+
+  // Actualizar escalas de las fotos según el tamaño de la pantalla
+  updateCardScales(responsive.cardScale);
+}
+
+function updateCardScales(scale) {
+  orbitCardGroups.forEach((group) => {
+    group.userData.baseScale = scale;
+    if (hoveredCard !== group) {
+      group.scale.set(scale, scale, scale);
+    }
+  });
 }
 
 /* ============================================================
@@ -977,8 +1066,14 @@ function spawnCosmicClickBubble(clientX, clientY) {
   const bubble = document.createElement('div');
   bubble.className = 'cosmic-click-bubble';
   bubble.textContent = COSMIC_MESSAGES[Math.floor(Math.random() * COSMIC_MESSAGES.length)];
-  bubble.style.left = `${clientX}px`;
-  bubble.style.top = `${clientY}px`;
+
+  // Mantener dentro de los bordes seguros de la pantalla (evitar recortes en móviles)
+  const marginX = 80;
+  const safeX = Math.max(marginX, Math.min(window.innerWidth - marginX, clientX));
+  const safeY = Math.max(70, Math.min(window.innerHeight - 80, clientY));
+
+  bubble.style.left = `${safeX}px`;
+  bubble.style.top = `${safeY}px`;
   document.body.appendChild(bubble);
 
   setTimeout(() => {
@@ -996,10 +1091,10 @@ function initShootingStars() {
     const star = document.createElement('div');
     star.className = 'shooting-star';
 
-    const startX = Math.random() * (window.innerWidth * 0.75);
-    const startY = Math.random() * (window.innerHeight * 0.45);
-    const length = 90 + Math.random() * 110;
-    const dx = 200 + Math.random() * 180;
+    const startX = Math.random() * (window.innerWidth * 0.7);
+    const startY = Math.random() * (window.innerHeight * 0.4);
+    const length = Math.min(180, Math.max(70, window.innerWidth * 0.22));
+    const dx = Math.min(260, Math.max(120, window.innerWidth * 0.38));
     const dy = dx * (0.45 + Math.random() * 0.35);
 
     star.style.left = `${startX}px`;

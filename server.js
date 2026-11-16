@@ -1,9 +1,22 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { exec } = require('child_process');
 
 let PORT = 3000;
+
+function getLocalIp() {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const net of interfaces[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return 'localhost';
+}
 const MIME_TYPES = {
   '.html': 'text/html; charset=UTF-8',
   '.css': 'text/css; charset=UTF-8',
@@ -63,11 +76,14 @@ server.on('error', (err) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
+  const localIp = getLocalIp();
   const url = `http://localhost:${PORT}/`;
+  const mobileUrl = `http://${localIp}:${PORT}/`;
   console.log(`\n==================================================`);
-  console.log(`🪐 Galaxia con Corazones de Amor (Alex Dev)`);
-  console.log(`✨ Servidor activo: ${url}`);
+  console.log(`🪐 Galaxia Cósmica 3D • Detalle Especial Para Cielo`);
+  console.log(`✨ En tu PC:     ${url}`);
+  console.log(`📱 En tu Móvil:  ${mobileUrl}`);
   console.log(`==================================================\n`);
 
   // Abrir navegador automáticamente

@@ -24,31 +24,40 @@
 
   <!-- 2. HUD Superior: Sonido, Título central dedicado y Botón de Carta -->
   <header class="hud-header">
-    <!-- Botón de Audio / Sonido -->
-    <button class="hud-btn" id="audioToggleBtn" title="Reproducir / Silenciar música">
-      <div class="sound-bars" id="soundBars">
-        <div class="sound-bar"></div>
-        <div class="sound-bar"></div>
-        <div class="sound-bar"></div>
-        <div class="sound-bar"></div>
-      </div>
-    </button>
+    <div class="hud-top-bar">
+      <!-- Botón de Audio / Sonido -->
+      <button class="hud-btn" id="audioToggleBtn" title="Reproducir / Silenciar música" aria-label="Música">
+        <div class="sound-bars" id="soundBars">
+          <div class="sound-bar"></div>
+          <div class="sound-bar"></div>
+          <div class="sound-bar"></div>
+          <div class="sound-bar"></div>
+        </div>
+      </button>
 
-    <!-- Título Central de la Galaxia -->
-    <div class="hud-title-container" id="hudTitleContainer">
-      <div class="hud-title">
-        <span class="title-badge">🪐</span>
-        <span id="titleText">PARA CIELO</span>
-        <span class="title-badge">💖</span>
+      <!-- Título Central de la Galaxia -->
+      <div class="hud-title-container" id="hudTitleContainer">
+        <div class="hud-title">
+          <span class="title-badge">🪐</span>
+          <span id="titleText">PARA CIELO</span>
+          <span class="title-badge">💖</span>
+        </div>
       </div>
-      <div class="hud-subtitle" id="subtitleText">«Entre millones de estrellas en el cielo, tú eres mi favorita»</div>
+
+      <!-- Botón elegante de Carta para Cielo -->
+      <button class="hud-letter-btn" id="letterOpenBtn" title="Leer carta especial para Cielo" aria-label="Carta para Cielo">
+        <span class="letter-btn-icon">💌</span>
+        <span class="letter-btn-text">
+          <span class="btn-text-full">Carta para Cielo</span>
+          <span class="btn-text-short">Carta</span>
+        </span>
+      </button>
     </div>
 
-    <!-- Botón elegante de Carta para Cielo -->
-    <button class="hud-letter-btn" id="letterOpenBtn" title="Leer carta especial para Cielo">
-      <span class="letter-btn-icon">💌</span>
-      <span class="letter-btn-text">Carta para Cielo</span>
-    </button>
+    <!-- Subtítulo elegante centrado debajo de la barra superior -->
+    <div class="hud-subtitle-container">
+      <div class="hud-subtitle" id="subtitleText">«Entre millones de estrellas en el cielo, tú eres mi favorita»</div>
+    </div>
   </header>
 
   <!-- 3. Indicador de interacción -->
